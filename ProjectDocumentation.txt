@@ -1,0 +1,26 @@
+Garvin Phan
+-Created all tables on MySql (Do not trust Kenny's connection)
+-The coding for the all CRUD APIS "GET", "POST", "PUT", "DELETE" of Cargo
+-The coding for the all CRUD APIS "GET", "POST", "PUT", "DELETE" of Spaceship
+-Troubleshooted code errors in the APIS
+-Uses his repository to turn in the project
+-Directly test APIS functionality with POSTMAN
+-Submits his repository link for Kenneth as collaborators on the project
+-Created EJS template for Captain,Cargo,Spaceship
+-Reconfigured the navigation bar from a template to work with links and javascript callbacks
+-Used html controls in the EJS files for Captain,Cargo,Spaceship to create the UI outline
+-Proofread Kenneth's EJS edits to work together with my edits
+-Created the login process with for the backend and frontend
+-Made sure the backend api for the login works with the frontend and UI
+
+Kenneth Rodriguez
+-The coding for the API "GET", "POST", "PUT", "DELETE" of Captain
+-Coded parts for comments and put into sections
+-Double checking Garvin's work
+-Worked with finding solutions for POSTMAN
+-Worked on text file
+-Provided test datasets to use with POSTMAN
+-Worked on the front-end of Captain,Cargo,and Spaceship
+-Created the inputs for Captain,Cargo,and Spaceship
+-Used Bootstrap for the front end in order to convey UI and UX
+-Created icons with navigation in order for users to have a better movement between pages.

@@ -1,0 +1,103 @@
+<!-- This is the Home page which is also for the cargo table -->
+<%- include('../template/head')-%>
+
+<body class="container">
+    <%- include('../template/nav')-%>
+    <header>
+        <%- include('../template/header'); %>
+    </header>
+
+    <main>
+        <!--This is the refresh button for GET Spaceship-->
+        <section>
+            <div>
+                <h5>
+                    GET Spaceship Information
+                </h5>
+            </div>
+            <button type="button" class="btn btn-primary btn-lg">GET BUTTON FUNCTION</button>
+        </section>
+        
+        
+        <section>
+            <br>
+            <div>
+              <h5>
+                  PUT Spaceship Information
+              </h5>
+            </div>
+          <!--This is PUT Spaceship Inputs-->
+            <form>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="ID">ID</label>
+                  <input type="text" class="form-control" id="ID" placeholder="ID">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="Max Weight">Max Weight</label>
+                    <input type="text" class="form-control" id="Max Weight" placeholder="Max Weight">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="Captain ID">Captain ID</label>
+                    <input type="text" class="form-control" id="Captain ID" placeholder="Captain ID">
+                </div>
+              </div>
+              <button type="button" class="btn btn-primary btn-lg">PUT BUTTON FUNCTION</button>
+            </form>
+          </section>
+
+            <section>
+              <br>
+              <div>
+                <h5>
+                    POST Spaceship Information
+                </h5>
+              </div>
+            <!--This is POST Captain Inputs-->
+              <form>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="Max Weight">Max Weight</label>
+                    <input type="text" class="form-control" id="Captain ID" placeholder="Max Weight">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="Captain ID">Captain ID</label>
+                    <input type="text" class="form-control" id="Captain ID" placeholder="Captain ID">
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-lg">POST BUTTON FUNCTION</button>
+              </form>
+            </section>
+            
+
+
+            <!-- This is the Delete for Spaceship by ID -->
+          <section>
+            <br>
+            <div>
+                <h5>
+                    DELETE Spaceship Information
+                </h5>
+            </div>
+            <br>
+            <form>
+              <div class="form-group">
+                <label for="DELETE">DELETE BY ID</label>
+                <input type="text" class="form-control" id="DELETE" placeholder="DELETE BY ID">
+              </div>
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Are you certain?</label>
+              </div>
+              <button type="submit" class="btn btn-primary">DELETE BUTTON FUNCTION </button>
+            </form>
+        </section>
+        
+</body>
+<%- include('../template/footer'); %>
+<script>
+    window.onload = function() {
+        document.getElementById('spaceship').classList.add('active');
+      };
+</script>
+</html>

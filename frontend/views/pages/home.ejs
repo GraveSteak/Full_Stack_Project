@@ -1,0 +1,127 @@
+<!-- This is the Home page which is also for the cargo table -->
+<%- include('../template/head')-%>
+
+<body class="container">
+    <%- include('../template/nav')-%>
+    <header>
+        <%- include('../template/header'); %>
+    </header>
+
+    <main>
+        <!--This is the refresh button for GET Cargo-->
+        <section>
+            <div>
+                <h5>
+                    GET Cargo Information
+                </h5>
+            </div>
+            <button type="button" class="btn btn-primary btn-lg">GET BUTTON FUNCTION</button>
+        </section>
+        
+        
+        <section>
+            <br>
+            <div>
+              <h5>
+                  PUT Cargo Information
+              </h5>
+            </div>
+          <!--This is PUT Cargo Inputs-->
+            <form>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="ID">ID</label>
+                  <input type="text" class="form-control" id="ID" placeholder="ID">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="Weight">Weight</label>
+                    <input type="text" class="form-control" id="Weight" placeholder="Weight">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="Cargotype">Cargotype</label>
+                    <input type="text" class="form-control" id="Cargotype" placeholder="Cargotype">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="Departure">Departure</label>
+                    <input type="text" class="form-control" id="Departure" placeholder="Departure">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="Arrival">Arrival</label>
+                    <input type="text" class="form-control" id="Arrival" placeholder="Arrival">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="Ship ID">Ship ID</label>
+                    <input type="text" class="form-control" id="Ship ID" placeholder="Ship ID">
+                  </div>
+              </div>
+              <button type="button" class="btn btn-primary btn-lg">PUT BUTTON FUNCTION</button>
+            </form>
+          </section>
+
+            <section>
+              <br>
+              <div>
+                <h5>
+                    POST Cargo Information
+                </h5>
+              </div>
+            <!--This is POST Cargo Inputs-->
+              <form>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="Weight">Weight</label>
+                    <input type="text" class="form-control" id="Weight" placeholder="Weight">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="Cargotype">Cargotype</label>
+                    <input type="text" class="form-control" id="Cargotype" placeholder="Cargotype">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="Departure">Departure</label>
+                    <input type="text" class="form-control" id="Departure" placeholder="Departure">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="Arrival">Arrival</label>
+                    <input type="text" class="form-control" id="Arrival" placeholder="Arrival">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="Ship ID">Ship ID</label>
+                    <input type="text" class="form-control" id="Ship ID" placeholder="Ship ID">
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-lg">POST BUTTON FUNCTION</button>
+              </form>
+            </section>
+            
+
+
+            <!-- This is the Delete for Cargo by ID -->
+          <section>
+            <br>
+            <div>
+                <h5>
+                    DELETE Cargo Information
+                </h5>
+            </div>
+            <br>
+            <form>
+              <div class="form-group">
+                <label for="DELETE">DELETE BY ID</label>
+                <input type="text" class="form-control" id="DELETE" placeholder="DELETE BY ID">
+              </div>
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Are you certain?</label>
+              </div>
+              <button type="submit" class="btn btn-primary">DELETE BUTTON FUNCTION </button>
+            </form>
+        </section>
+
+</body>
+<%- include('../template/footer'); %>
+<script>
+    window.onload = function() {
+        document.getElementById('home').classList.add('active');
+      };
+</script>
+</html>

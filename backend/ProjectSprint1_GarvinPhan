@@ -1,0 +1,231 @@
+#CIS 3368 Sprint 1 Code
+#Kenneth Rodriguez and Garvin Phan 
+#Most of the code used is from Homework, Classwork, and Exam codes
+#Citations #Error Troubleshooting
+#https://stackoverflow.com/questions/72893180/flask-restful-error-request-content-type-was-not-application-json  "This is for Content-Type for Postman. The tester has to add in Content-Type in the Key column and 'application/json' in the value column." 
+#https://github.com/github/fetch/issues/318
+#https://stackoverflow.com/questions/18742492/error-1064-42000-you-have-an-error-in-your-sql-syntax
+#https://stackoverflow.com/questions/57016805/mysql-error-1064-42000-you-have-an-error-in-your-sql-syntax-check-the-manual
+import flask
+from flask import request, make_response, jsonify
+from mysql.connector import Error
+from sql import create_connection, execute_read_query, execute_query
+import creds
+
+myCreds = creds.Creds()
+conn = create_connection(myCreds.conString, myCreds.userName, myCreds.password, myCreds.dbName)
+
+
+######################################################################################################################
+#This will focus on cargo table
+
+#setting up an application name
+app = flask.Flask(__name__) #sets up the application
+app.config["DEBUG"] = True #allow to show errors in browser
+
+#basic HTTP authentication, prompts username and password upon contacting the endpoint: http://127.0.0.1:5000/api/login PLEASE USE A BROWSER FOR THE LOGIN API
+
+#Authorized user json list for known password, we do not have a database table for the login credential.
+authorizedusers = [
+    {
+        #Admin user
+        'username': 'username',
+        'password': 'password', 
+    }
+]
+@app.route('/api/login', methods=['GET'])
+def login_headers():
+    username = request.headers['username'] #get the header parameters (as dictionaries)
+    pw = request.headers['password']
+    for auth in authorizedusers: #loop over all users and find one that is authorized to access
+        if auth['username'] == username and auth['password'] == pw: #found an auth user
+            return '<h1> You are authorized to view, create and delete cargo. </h1>'
+
+    return 'UNAUTHORIZED USER' 
+
+@app.route('/api/cargo/get', methods=['GET']) #API to get a cargo from the db table in AWS by id as a JSON response: http://127.0.0.1:5000/api/cargo
+def get_cargo():
+    myCreds = creds.Creds()
+    conn = create_connection(myCreds.conString, myCreds.userName, myCreds.password, myCreds.dbName)
+    sql = "SELECT * FROM cargo"
+    results = execute_read_query(conn, sql)
+    return jsonify(results)
+
+#=====================================================================================================================================================
+
+@app.route('/api/cargo/post', methods=['POST']) # Add cargo as POST: http://127.0.0.1:5000/api/cargo
+def add_cargo():
+    request_data = request.get_json() # provides the json input variables to be used on postman
+    newWeight = request_data['weight']
+    cargotype = request_data['cargotype']
+    shipid = request_data['shipid']         
+    
+    read_spaceship = "SELECT * FROM spaceship WHERE id = '%s' " % (shipid) # First, reads the spaceship table to place the table "read" in a variable
+    reader1 = execute_read_query(conn, read_spaceship)
+    if reader1: 
+        shipWeight = reader1[0]['maxweight']   # Reader1 variable is then used to specify the maxweight from a particular ship based on the shipid
+        if newWeight <= shipWeight:   # if-statement is used to distinguish applicable cargo weight and maximum ship weight
+            add_statement = """INSERT INTO cargo (weight, cargotype, shipid) VALUES ('%s', '%s', '%s')""" % (newWeight, cargotype, shipid) # SQL code that adds data into the api and then through MySQL
+            execute_query(conn, add_statement) #commit changes to database
+            return "Cargo Information Added Successfully"
+        else:
+            return "Cargo exceeds spaceship weight!"
+    
+
+#=======================================================================================================================================================
+
+@app.route('/api/cargo/put', methods=['PUT']) # Update cargo in the database: http://127.0.0.1:5000/api/cargo
+def put_cargo():          
+    request_data = request.get_json() # provides the json input variables to be used on postman
+    weight = request_data['weight']
+    cargotype = request_data['cargotype']
+    departure = request_data['departure']
+    arrival = request_data['arrival']
+    shipid = request_data['shipid']
+    id = request_data['id']
+
+    # SQL code that updates current data into the api and then through MySQL based on ID
+    update_statement = "UPDATE cargo SET weight='%s', cargotype='%s', departure='%s', arrival='%s', shipid=%s  WHERE id = %s" % (weight, cargotype, departure, arrival, shipid, id)
+    execute_query(conn, update_statement)
+
+    return "Cargo Information Updated Successful"
+
+#===========================================================================================================================================================
+
+@app.route('/api/cargo/delete', methods=['DELETE']) # delete cargo: http://127.0.0.1:5000/api/cargo
+def delete_cargo():      
+    if 'id' in request.args: #only if an id is provided as an argument, proceed
+        idToDelete = int(request.args['id'])
+    else:
+        return 'ERROR: No ID provided!'
+
+    select = "SELECT * FROM cargo"
+    cargos = execute_read_query(conn, select)
+
+    for i in range(len(cargos) - 1, -1, -1): #Looks through the read_query to search for the specified ID and delete the respected data
+        if cargos[i]['id'] == idToDelete:                    
+            delete_statement = "DELETE FROM cargo WHERE id = %s" % (idToDelete)
+            execute_query(conn, delete_statement)
+    return "Cargo Information Delete Successful"
+
+
+#####################################################################################################################################
+#this will focus on spaceship
+
+@app.route('/api/spaceship/get', methods=['GET']) #API to get a spaceship from the db table in AWS by id as a JSON response: http://127.0.0.1:5000/api/spaceship
+def get_spaceship(): 
+    myCreds = creds.Creds()
+    conn = create_connection(myCreds.conString, myCreds.userName, myCreds.password, myCreds.dbName)
+    sql = "SELECT * FROM spaceship"  #Read from the spaceship table 
+    results = execute_read_query(conn, sql)
+    return jsonify(results)
+
+#===========================================================================================================================================
+
+@app.route('/api/spaceship/post', methods=['POST']) # Add spaceship as POST: http://127.0.0.1:5000/api/spaceship
+def add_spaceship():
+    request_data = request.get_json() # provides the json input variables to be used on postman
+    maxweight = request_data['maxweight']
+    captainid = request_data['captainid']        
+                       
+    # SQL code that adds data into the api and then through MySQL
+    add_statement = """INSERT INTO spaceship (maxweight, captainid) VALUES ('%s', %s)""" % (maxweight, captainid)
+    execute_query(conn, add_statement)
+    return "Spaceship Information Added Successfully"
+
+#================================================================================================================================================
+
+@app.route('/api/spaceship/put', methods=['PUT']) # Update spaceship in the database: http://127.0.0.1:5000/api/spaceship
+def update_spaceship():          
+    request_data = request.get_json() # provides the json input variables to be used on postman
+    maxweight = request_data['maxweight']
+    captainid = request_data['captainid']
+    id = request_data['id']
+
+    # SQL code that updates current data into the api and then through MySQL based on ID
+    update_statement = "UPDATE spaceship SET maxweight='%s', captainid=%s WHERE id = %s" % (maxweight, captainid, id)
+    execute_query(conn, update_statement)
+
+    return "Spaceship Information Updated Successful"
+
+#=================================================================================================================================================
+
+@app.route('/api/spaceship/delete', methods=['DELETE']) # delete spaceship: http://127.0.0.1:5000/api/spaceship
+def delete_spaceship():      
+    if 'id' in request.args: #only if an id is provided as an argument, proceed
+        idToDelete = int(request.args['id'])
+    else:
+        return 'ERROR: No ID provided!'
+
+    select = "SELECT * FROM spaceship"
+    spaceships = execute_read_query(conn, select)
+
+    for i in range(len(spaceships) - 1, -1, -1): #Looks through the read_query to search for the specified ID and delete the respected data
+        if spaceships[i]['id'] == idToDelete:                    
+            delete_statement = "DELETE FROM spaceship WHERE id = %s" % (idToDelete)
+            execute_query(conn, delete_statement)
+    return "Spaceship Information Delete Successful"
+
+#########################################################################################################################################
+#this will focus on captain table
+
+@app.route('/api/captain/get', methods=['GET']) #API to get a captain from the db table in AWS by id as a JSON response: http://127.0.0.1:5000/api/captain
+def get_captain():
+    myCreds = creds.Creds()
+    conn = create_connection(myCreds.conString, myCreds.userName, myCreds.password, myCreds.dbName)
+    sql = "SELECT * FROM captain"  #Read from the spaceship table 
+    results = execute_read_query(conn, sql)
+    return jsonify(results)
+
+#====================================================================================================================================
+
+@app.route('/api/captain/post', methods=['POST']) # Add captain as POST: http://127.0.0.1:5000/api/captain
+def add_captain():
+    request_data = request.get_json() # provides the json input variables to be used on postman
+    firstnametype = request_data['firstname']
+    lastnametype = request_data['lastname']
+    ranktype = request_data['ranks']
+    homeplanetype = request_data['homeplanet']          
+                       
+    # SQL code that adds data into the api and then through MySQL
+    add_statement = """INSERT INTO captain (firstname, lastname, ranks, homeplanet) VALUES ('%s', '%s', '%s', '%s')""" % (firstnametype, lastnametype, ranktype, homeplanetype)
+    execute_query(conn, add_statement)
+    return "Captain Information Added Successfully"
+
+#=========================================================================================================================================
+
+@app.route('/api/captain/put', methods=['PUT']) # Update captain in the database: http://127.0.0.1:5000/api/captain
+def update_captain():          
+    request_data = request.get_json() # provides the json input variables to be used on postman
+    firstnametype = request_data['firstname']
+    lastnametype = request_data['lastname']
+    ranktype = request_data['ranks']
+    homeplanetype = request_data['homeplanet'] 
+    id = request_data['id']
+
+    # SQL code that updates current data into the api and then through MySQL based on ID
+    update_statement = "UPDATE captain SET firstname='%s', lastname='%s', ranks='%s', homeplanet='%s' WHERE id = '%s'" % (firstnametype, lastnametype, ranktype, homeplanetype, id)
+    execute_query(conn, update_statement)
+
+    return "Captain information Update Successful"
+
+#=============================================================================================================================================
+
+@app.route('/api/captain/delete', methods=['DELETE']) # delete captain: http://127.0.0.1:5000/api/captain
+def delete_captain():      
+    if 'id' in request.args: #only if an id is provided as an argument, proceed
+        idToDelete = int(request.args['id'])
+    else:
+        return 'ERROR: No ID provided!'
+
+    select = "SELECT * FROM captain"
+    captains = execute_read_query(conn, select)
+
+    for i in range(len(captains) - 1, -1, -1): #Looks through the read_query to search for the specified ID and delete the respected data
+        if captains[i]['id'] == idToDelete:                    
+            delete_statement = "DELETE FROM captain WHERE id = %s" % (idToDelete)
+            execute_query(conn, delete_statement)
+    return "Captain information Deleted Successful"
+
+
+app.run()

@@ -1,0 +1,14 @@
+Citations and References used in Sprint 2
+
+https://stackoverflow.com/questions/72893180/flask-restful-error-request-content-type-was-not-application-json  "This is for Content-Type for Postman. The tester has to add in Content-Type in the Key column and 'application/json' in the value column." 
+https://github.com/github/fetch/issues/318
+https://stackoverflow.com/questions/18742492/error-1064-42000-you-have-an-error-in-your-sql-syntax
+https://stackoverflow.com/questions/57016805/mysql-error-1064-42000-you-have-an-error-in-your-sql-syntax-check-the-manual
+https://getbootstrap.com/docs/4.0/components/buttons/
+https://getbootstrap.com/docs/4.0/components/forms/
+https://getbootstrap.com/docs/4.0/components/buttons/
+https://getbootstrap.com/docs/4.0/components/forms/
+https://icons.getbootstrap.com/?q=person
+https://icons.getbootstrap.com/icons/rocket-takeoff/
+https://icons.getbootstrap.com/icons/box/
+https://icons.getbootstrap.com/icons/person-badge-fill/
